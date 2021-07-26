@@ -53,15 +53,11 @@ def get_top_shelves(goodreads_response, n):
 # Press the green button in the gutter to run the script.
 def get():
     # Columns to use for lookup: Book Id, Title, Author, ISBN
-    maybe_key = environ.get('goodreads_key')
-    if maybe_key is None:
-        try:
-            with open("goodreads_keys.json", "r") as f:
-                my_key = json.load(f)['key']
-        except Exception as e:
-            print("Unable to find Goodreads API key.")
-    else:
-        my_key = maybe_key
+    try:
+        my_key = st.secrets["goodreads_key"]
+
+    except Exception as e:
+        st.write("Unable to find Goodreads API key.")
 
     path = st.file_uploader("Upload your goodreads library file", accept_multiple_files=False)
 
