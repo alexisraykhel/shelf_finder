@@ -8,8 +8,14 @@ from get_shelves import get
 
 st.title('📚 Book Finder 📚')
 
+with open("README.md", "r") as f:
+    st.markdown(f.read())
+
+st.write("---")
+
 st.write("""
-Welcome to shelf finder. Please choose from the following options:
+Welcome to book finder.
+\nPlease choose from the following options:
 """)
 
 option = st.selectbox(

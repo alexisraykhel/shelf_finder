@@ -4,12 +4,10 @@ from io import BytesIO
 
 import pandas as pd
 import time
-import json
 import requests
 import xmltodict
 import base64
 import streamlit as st
-from os import environ
 
 
 
