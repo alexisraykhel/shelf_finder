@@ -1,4 +1,4 @@
-# Shelf Finder
+# Book Finder
 
 This streamlit app allows you to filter
 your unread goodreads books by genre.
