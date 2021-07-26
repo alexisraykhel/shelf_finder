@@ -54,7 +54,7 @@ def get_top_shelves(goodreads_response, n):
 def get():
     # Columns to use for lookup: Book Id, Title, Author, ISBN
     maybe_key = environ.get('goodreads_key')
-    if isinstance(maybe_key, None):
+    if maybe_key is None:
         try:
             with open("goodreads_keys.json", "r") as f:
                 my_key = json.load(f)['key']
