@@ -1,10 +1,22 @@
 # read in books on to-read list
-# find top 5 tags for those books
+# find top tags for those books
+from io import BytesIO
 
 import pandas as pd
+import time
 import json
 import requests
 import xmltodict
+import base64
+import streamlit as st
+
+
+
+def get_data_download_link(df):
+    csv = df.to_csv(index=False).encode()
+    b64 = base64.b64encode(csv).decode()
+    href = f'<a href="data:file/csv;base64,{b64}" download="goodreads_library_to_read_shelves.csv" target="_blank">Download csv file</a>'
+    return href
 
 
 def make_request(book_id, key):
@@ -38,18 +50,19 @@ def get_top_shelves(goodreads_response, n):
 
 
 # Press the green button in the gutter to run the script.
-if __name__ == '__main__':
+def get():
     # Columns to use for lookup: Book Id, Title, Author, ISBN
 
     with open("goodreads_keys.json", "r") as f:
         my_file = json.load(f)
 
-    df = pd.read_csv("goodreads_library_export.csv")
+    path = st.file_uploader("Upload your goodreads library file", accept_multiple_files=False)
+
+    df = pd.read_csv(path)
 
     to_read_df = df[df['Read Count'] == 0]
 
     shelves = []
-    import time
     for i, x in enumerate(to_read_df.iterrows()):
         time.sleep(1)
         print(f"On {i}/{to_read_df.shape[0]}")
@@ -60,8 +73,11 @@ if __name__ == '__main__':
             shelves.append([])
             print(f"Book {row['Title']} by {row['Author']} didn't work: \n {r}\n--")
         else:
-            shelves.append(get_top_shelves(r, 5))
+            shelves.append(get_top_shelves(r, 10))
 
     to_read_df['shelves'] = shelves
 
-    to_read_df.to_csv("goodreads_library_to_read_shelves.csv", index=False)
+    st.markdown(get_data_download_link(to_read_df), unsafe_allow_html=True)
+
+    st.write("You can now change the setting at the top to `to read list` "
+             "and use the newly generated file.")
