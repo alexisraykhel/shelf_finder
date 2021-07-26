@@ -9,6 +9,7 @@ import requests
 import xmltodict
 import base64
 import streamlit as st
+from os import environ
 
 
 
@@ -52,9 +53,15 @@ def get_top_shelves(goodreads_response, n):
 # Press the green button in the gutter to run the script.
 def get():
     # Columns to use for lookup: Book Id, Title, Author, ISBN
-
-    with open("goodreads_keys.json", "r") as f:
-        my_file = json.load(f)
+    maybe_key = environ.get('goodreads_key')
+    if isinstance(maybe_key, str):
+        my_key = maybe_key
+    else:
+        try:
+            with open("goodreads_keys.json", "r") as f:
+                my_key = json.load(f)['key']
+        except Exception as e:
+            print("Unable to find Goodreads API key.")
 
     path = st.file_uploader("Upload your goodreads library file", accept_multiple_files=False)
 
@@ -67,7 +74,7 @@ def get():
         time.sleep(1)
         print(f"On {i}/{to_read_df.shape[0]}")
         row = x[1]
-        r = make_request(row['Book Id'], my_file['key'])
+        r = make_request(row['Book Id'], my_key)
 
         if isinstance(r, str):
             shelves.append([])
