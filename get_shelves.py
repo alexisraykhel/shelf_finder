@@ -75,6 +75,10 @@ def get():
             print(f"Book {row['Title']} by {row['Author']} didn't work: \n {r}\n--")
         else:
             shelves.append(get_top_shelves(r, 10))
+            
+    st.write(f"Saving newly generated to read file at: to_read.csv")
+
+    to_read_df.to_csv("to_read.csv", index=False)
 
     to_read_df['shelves'] = shelves
 
